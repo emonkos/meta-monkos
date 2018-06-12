@@ -1,0 +1,7 @@
+Hello there...
+  You area about to build Monk OS, a distribution for makers
+
+You can now run 'bitbake <target>'
+
+Currently supported targets are:
+    monkos-minimal-boot

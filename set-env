@@ -1,0 +1,74 @@
+#!/bin/sh
+
+#check for who is running this script
+if [ "$(whoami)" = "root" ];
+then
+  echo >&2 "Error: should not run this script as root"
+  exit 1;
+fi
+
+#check for bash shell
+if [ -z $BASH ];
+then
+  echo >&2 "Error: this script needs to be run inside bash shell"
+  exit 1
+fi
+
+THIS_SCRIPT=$BASH_SOURCE
+
+#check how the script is executed
+if [ "$0" = "$THIS_SCRIPT" ];
+then
+  echo >&2 "Error: this script needs to be sourced"
+  exit 1
+fi
+
+if [ -z "$OEROOT" ]; then
+    OEROOT=$(dirname "$THIS_SCRIPT")
+    OEROOT=$(readlink -f "$OEROOT")/../openembedded-core
+fi
+unset THIS_SCRIPT
+
+if [ -z "$OEROOT" ]; then
+    echo >&2 "Error: OEROOT is not defined!"
+    return 1
+fi
+export OEROOT
+
+# Make sure we're not using python v3.x as 'python', we don't support it.
+py_v2_check=$(/usr/bin/env python --version 2>&1 | grep "Python 3")
+if [ -n "$py_v2_check" ]; then
+    echo >&2 "OpenEmbedded requires 'python' to be python v2 (>= 2.7.3), not python v3."
+    echo >&2 "Please set up python v2 as your default 'python' interpreter."
+    return 1
+fi
+unset py_v2_check
+
+py_v27_check=$(python -c 'import sys; print sys.version_info >= (2,7,3)')
+if [ "$py_v27_check" != "True" ]; then
+    echo >&2 "OpenEmbedded requires 'python' to be python v2 (>= 2.7.3), not python v3."
+    echo >&2 "Please upgrade your python v2."
+fi
+unset py_v27_check
+
+# We potentially have code that doesn't parse correctly with older versions
+# of Python, and rather than fixing that and being eternally vigilant for
+# any other new feature use, just check the version here.
+py_v34_check=$(python3 -c 'import sys; print(sys.version_info >= (3,4,0))')
+if [ "$py_v34_check" != "True" ]; then
+    echo >&2 "BitBake requires Python 3.4.0 or later as 'python3'"
+    return 1
+fi
+unset py_v34_check
+
+BUILD_DIR=build-$MACHINE
+CURRENT_DIR=$(pwd)
+
+TEMPLATECONF=${CURRENT_DIR}/meta-monkos/conf source openembedded-core/oe-init-build-env ${BUILD_DIR}
+
+unset BUILD_DIR CURRENT_DIR OEROOT
+
+# Change settings according environment
+sed -e "s/@\$MACHINE\$@/$MACHINE/g" \
+    -i conf/local.conf
+

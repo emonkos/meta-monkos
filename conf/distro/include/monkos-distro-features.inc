@@ -1,0 +1,22 @@
+# We dont want (L)GPL-3.0+
+#INCOMPATIBLE_LICENSE = "GPLv3.0 GPLv3 GPL-3.0 GPLv3+ LGPLv3.0 LGPLv3 LGPL-3.0 LGPLv3+"
+#WHITELIST_GPLv3 = "make readline gdbm coreutils diffutils bash grep"
+#WHITELIST_LGPLv2 = "make"
+#WHITELIST_GPLv3+ = "readline"
+#WHITELIST_GPL-3.0 = "${WHITELIST_GPLv3}"
+
+PREFERRED_VERSION_linux-yocto ?= "4.14%"
+
+# Override these in poky based distros
+MONKOS_DEFAULT_DISTRO_FEATURES = "largefile opengl ptest multiarch wayland vulkan"
+MONKOS_DEFAULT_EXTRA_RDEPENDS = "packagegroup-core-boot"
+MONKOS_DEFAULT_EXTRA_RRECOMMENDS = "kernel-module-af-packet"
+
+DISTRO_FEATURES ?= "${DISTRO_FEATURES_DEFAULT} ${DISTRO_FEATURES_LIBC} ${MONKOS_DEFAULT_DISTRO_FEATURES}"
+DISTRO_FEATURES_append = " systemd"
+VIRTUAL-RUNTIME_init_manager = "systemd"
+VIRTUAL-RUNTIME_initscripts = ""
+DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
+
+DISTRO_EXTRA_RDEPENDS += " ${MONKOS_DEFAULT_EXTRA_RDEPENDS}"
+DISTRO_EXTRA_RRECOMMENDS += " ${MONKOS_DEFAULT_EXTRA_RRECOMMENDS}"
