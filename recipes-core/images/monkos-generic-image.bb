@@ -12,4 +12,5 @@ IMAGE_FEATURES += "ssh-server-dropbear splash"
 IMAGE_INSTALL += " \
     packagegroup-monkos-base-linux \
     packagegroup-monkos-base-machine \
+    packagegroup-rdk \
     "
