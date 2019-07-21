@@ -1,0 +1,15 @@
+# currently, the BindTo is not working
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+StandardOutput=syslog+console
+
+ExecStart=/sbin/ip link set dev %i up
+ExecReload=/sbin/ip addr flush dev %i
+ExecStop=/sbin/ip addr flush dev %i
+ExecStop=/sbin/ip link set dev %i down
+
+[Unit]
+BindsTo=%i.device
+
