@@ -6,6 +6,7 @@ PR = "r2"
 SRC_URI = " \
            file://network@.service \
            file://network.rules \
+           file://udhcpc@.service \
           "
 
 FILES_${PN} = "${sysconfdir}/udev/rules.d/* ${base_libdir}/systemd/system/*"
@@ -19,3 +20,4 @@ do_install() {
     install -m 0644 ${WORKDIR}/network.rules     ${D}${sysconfdir}/udev/rules.d/network.rules
 }
 
+inherit systemd
