@@ -13,4 +13,5 @@ IMAGE_INSTALL += " \
     packagegroup-monkos-base-linux \
     packagegroup-monkos-base-machine \
     packagegroup-rdk \
+    packagegroup-monkos-networking \
     "
