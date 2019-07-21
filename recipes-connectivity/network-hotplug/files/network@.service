@@ -3,8 +3,12 @@
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/sbin/ifup -f %i
 StandardOutput=syslog+console
+
+ExecStart=/sbin/ip link set dev %i up
+ExecReload=/sbin/ip addr flush dev %i
+ExecStop=/sbin/ip addr flush dev %i
+ExecStop=/sbin/ip link set dev %i down
 
 [Unit]
 BindsTo=%i.device
