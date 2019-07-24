@@ -1,0 +1,39 @@
+From edbf5424c84583669769e90ffe31ba5543bc9633 Mon Sep 17 00:00:00 2001
+From: Johan Saji <johansaji@tataelxsi.co.in>
+Date: Wed, 24 Jul 2019 09:19:21 +0000
+Subject: [PATCH] disable cursor and changed XDG_RUNTIME_DIR
+
+while starting the compositor, westeros displays a cursor. This cursor
+is not required in our use case. This pach will disable it.
+
+XDG_RUNTIME_DIR path was originally set to `/run`. This seems too
+generic. So changing it to `/run/westeros`
+---
+ systemd/westeros-init | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/systemd/westeros-init b/systemd/westeros-init
+index 89ea25b..af94575 100644
+--- a/systemd/westeros-init
++++ b/systemd/westeros-init
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ 
+ if test -z "$XDG_RUNTIME_DIR"; then
+-    export XDG_RUNTIME_DIR="/run"
++    export XDG_RUNTIME_DIR="/run/westeros/"
+ fi
+ if ! test -d "$XDG_RUNTIME_DIR"; then
+     mkdir --parents $XDG_RUNTIME_DIR
+@@ -29,7 +29,7 @@ fi
+ #Dispmanx renderer support in RPI
+ 
+ if [ -f /usr/lib/libwesteros_render_dispmanx.so.0 ]; then
+-    RENDERER="/usr/lib/libwesteros_render_dispmanx.so.0 --enableCursor"
++    RENDERER="/usr/lib/libwesteros_render_dispmanx.so.0"
+ else
+     RENDERER="/usr/lib/libwesteros_render_gl.so.0"
+ fi
+-- 
+2.7.4
+
