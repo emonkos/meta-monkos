@@ -4,4 +4,5 @@ Hello there...
 You can now run 'bitbake <target>'
 
 Currently supported targets are:
-    monkos-minimal-boot
+    monkos-minimal-boot        - A build that just brings up the HW
+    monkos-generic-image       - Complete Monk OS build
